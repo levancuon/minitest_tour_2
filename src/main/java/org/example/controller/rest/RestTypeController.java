@@ -4,6 +4,7 @@ import org.example.model.DTO.TypeDTO;
 import org.example.model.Type;
 import org.example.service.ITypeService;
 import org.example.service.imp.TypeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin("*")
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/type")
 public class RestTypeController {
+    @Autowired
     private final ITypeService typeService;
 
     public RestTypeController(ITypeService typeService) {
@@ -23,10 +25,8 @@ public class RestTypeController {
 
     @GetMapping
     public ResponseEntity<Iterable<Type>> findAllType() {
-        List<Type> types = (List<Type>) typeService.findAll();
-        if (types.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        Iterable<Type> types = typeService.findAll();
+        System.out.println(types);
         return new ResponseEntity<>(types, HttpStatus.OK);
     }
 

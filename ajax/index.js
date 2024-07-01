@@ -27,7 +27,7 @@ function getTour() {
                 let id = $(this).data().id;
                 showFormUpdate(id)
             });
-            $(".delete").click(function (){
+            $(".delete").click(function () {
                 let id = $(this).data().id;
                 deletee(id)
             })
@@ -77,11 +77,11 @@ function update() {
     let destination = $('#destination').val();
     let price = $('#price').val();
     let id = $("#update-tour").data().id
-let updateTour ={
-    code: code,
-    destination:destination,
-    price:price
-}
+    let updateTour = {
+        code: code,
+        destination: destination,
+        price: price
+    }
 
     $.ajax({
         headers: {
@@ -91,14 +91,15 @@ let updateTour ={
         type: "put",
         data: JSON.stringify(updateTour),
         url: "http://localhost:8080/api/tour/" + id,
-        success: function (){
+        success: function () {
             getTour();
             $("#form").remove();
             console.log("update thành công")
         }
     })
 }
-function deletee(id){
+
+function deletee(id) {
     $.ajax({
         headers: {
             'Accept': 'application/json',
@@ -106,14 +107,14 @@ function deletee(id){
         },
         type: "delete",
         url: "http://localhost:8080/api/tour/" + id,
-        success: function (){
+        success: function () {
             getTour();
             console.log("update thành công")
         }
     })
 }
 
-function create(){
+function create() {
     let code = $('#code').val();
     let destination = $('#destination').val();
     let price = $('#price').val();
@@ -122,8 +123,11 @@ function create(){
         code: code,
         destination: destination,
         price: price,
-        type:type
+        type: {
+            id: type
+        }
     };
+    console.log(newTour)
     // gọi phương thức ajax
     $.ajax({
         headers: {
@@ -134,7 +138,7 @@ function create(){
         data: JSON.stringify(newTour),
         //tên API
         url: "http://localhost:8080/api/tour",
-        success: function (){
+        success: function () {
             getTour();
             alert("Tạo mới thành công")
         }
@@ -143,8 +147,21 @@ function create(){
     //chặn sự kiện mặc định của thẻ
     event.preventDefault();
 }
-function showFormCreate(){
-            let formCreate = `
+
+function showFormCreate() {
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: "get",
+        url: "http://localhost:8080/api/type",
+        success: function (data) {
+            let options = "";
+            $.each(data, function (index, el) {
+                options += `<option id="type"  value="${el.id}" >${el.name}</option>`;
+            })
+                let formCreate = `
              <form id="form" novalidate="novalidate">
         <div>
             <label for="code"> code</label>
@@ -160,7 +177,10 @@ function showFormCreate(){
         </div>
         <div>
             <label for="type">type</label>
-            <input type="text" id="type" value="cuongvipro"/>
+            <select name="type" id="type">
+            ${options}
+            </select>
+            
         </div>
         <input type="submit" value="Save" id="create-tour"/>
             `
@@ -168,9 +188,15 @@ function showFormCreate(){
             $("#create-tour").click(function (e) {
                 e.preventDefault();
                 create()
+            })
+
+        }
     })
+
 }
+
+
 getTour();
-$("#showFormCreate").click(function (){
+$("#showFormCreate").click(function () {
     showFormCreate()
 });
