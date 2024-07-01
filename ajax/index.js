@@ -113,5 +113,30 @@ function deletee(id){
     })
 }
 
+function showFormCreate(){
+    let code = $('#code').val();
+    let destination = $('#destination').val();
+    let price = $('#price').val();
+    let newTour = {
+        code: code,
+        destination: destination,
+        price: price
+    };
+    // gọi phương thức ajax
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: "POST",
+        data: JSON.stringify(newTour),
+        //tên API
+        url: "http://localhost:8080/api/tour",
+        //xử lý khi thành công
+        success: successHandler
 
+    });
+    //chặn sự kiện mặc định của thẻ
+    event.preventDefault();
+}
 getTour();

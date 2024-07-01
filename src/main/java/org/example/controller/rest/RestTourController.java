@@ -40,7 +40,7 @@ public class RestTourController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tour> updatePost(@PathVariable Long id, @RequestBody Tour tour) {
+    public ResponseEntity<Tour> updateTour(@PathVariable Long id, @RequestBody Tour tour) {
         Optional<Tour> tourOptional = tourService.findById(id);
         if (!tourOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -51,12 +51,12 @@ public class RestTourController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Tour> deletePost(@PathVariable Long id) {
+    public ResponseEntity<Tour> deleteTour(@PathVariable Long id) {
         Optional<Tour> tourOptional = tourService.findById(id);
         if (!tourOptional.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         tourService.remove(id);
         return new ResponseEntity<>(tourOptional.get(), HttpStatus.OK);
     }
-
-
+    @PostMapping("/{id}")
+    public ResponseEntity<Tour> create
 }
