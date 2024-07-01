@@ -113,14 +113,16 @@ function deletee(id){
     })
 }
 
-function showFormCreate(){
+function create(){
     let code = $('#code').val();
     let destination = $('#destination').val();
     let price = $('#price').val();
+    let type = $('#type').val();
     let newTour = {
         code: code,
         destination: destination,
-        price: price
+        price: price,
+        type:type
     };
     // gọi phương thức ajax
     $.ajax({
@@ -132,11 +134,43 @@ function showFormCreate(){
         data: JSON.stringify(newTour),
         //tên API
         url: "http://localhost:8080/api/tour",
-        //xử lý khi thành công
-        success: successHandler
+        success: function (){
+            getTour();
+            alert("Tạo mới thành công")
+        }
 
     });
     //chặn sự kiện mặc định của thẻ
     event.preventDefault();
 }
+function showFormCreate(){
+            let formCreate = `
+             <form id="form" novalidate="novalidate">
+        <div>
+            <label for="code"> code</label>
+            <input type="text" id="code" />
+        </div>
+        <div>
+            <label for="destination">destination</label>
+            <input type="text" id="destination" />
+        </div>
+        <div>
+            <label for="price">price</label>
+            <input type="text" id="price" />
+        </div>
+        <div>
+            <label for="type">type</label>
+            <input type="text" id="type" value="cuongvipro"/>
+        </div>
+        <input type="submit" value="Save" id="create-tour"/>
+            `
+            $(".formCreate").html(formCreate);
+            $("#create-tour").click(function (e) {
+                e.preventDefault();
+                create()
+    })
+}
 getTour();
+$("#showFormCreate").click(function (){
+    showFormCreate()
+});
