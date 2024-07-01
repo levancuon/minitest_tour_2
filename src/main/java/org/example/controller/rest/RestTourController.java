@@ -57,6 +57,9 @@ public class RestTourController {
         tourService.remove(id);
         return new ResponseEntity<>(tourOptional.get(), HttpStatus.OK);
     }
-    @PostMapping("/{id}")
-    public ResponseEntity<Tour> create
+    @PostMapping
+    public ResponseEntity<Tour> createTour(@RequestBody Tour tour) {
+        tourService.save(tour);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }
