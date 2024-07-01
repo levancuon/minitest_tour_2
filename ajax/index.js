@@ -5,9 +5,7 @@ function getTour() {
             'Content-Type': 'application/json'
         },
         type: "GET",
-        //tên API
         url: "http://localhost:8080/api/tour",
-        //xử lý khi thành công
         success: function (data) {
             let itemHtml = "";
             $.each(data, function (index, el) {
@@ -20,20 +18,21 @@ function getTour() {
                             <td>${el.price}</td>
                             <td>${el?.type?.name}</td>
                             <td><button class="update" data-id="${el.id}">update</button></td>
-                            <td><a>delete</a></td>
+                            <td><button class="delete" data-id="${el.id}">delete</button></td>
                         </tr>
                 `;
-
             })
             $(".list-tour").html(itemHtml);
             $(".update").click(function () {
                 let id = $(this).data().id;
-                // lấy id cần update
                 showFormUpdate(id)
             });
+            $(".delete").click(function (){
+                let id = $(this).data().id;
+                deletee(id)
+            })
         }
     })
-
 }
 
 
@@ -60,7 +59,6 @@ function showFormUpdate(id) {
             <label for="price">price</label>
             <input type="text" id="price" value="${data.price}"/>
         </div>
-        
         <input type="submit" value="Edit" id="update-tour" data-id="${data.id}" />
     </form>
             `
@@ -100,7 +98,20 @@ let updateTour ={
         }
     })
 }
-
+function deletee(id){
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: "delete",
+        url: "http://localhost:8080/api/tour/" + id,
+        success: function (){
+            getTour();
+            console.log("update thành công")
+        }
+    })
+}
 
 
 getTour();
