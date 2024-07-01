@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="/layout :: head">
+    <title>List Tour</title>
+</head>
+<body>
+<h3>Tour</h3>
+<p>
+    <a th:href="@{/tour/create}">
+        Add new tour
+    </a>
+</p>
+<p>
+    <a th:href="@{/type}">
+        Type
+    </a>
+</p>
+<div style="margin-bottom: 10px; margin-left: 110px">
+    <form th:action="@{/tour/search}" method="get">
+        <label><input type="text" name="search"></label>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+<div style="margin-bottom: 10px; margin-left: 110px">
+    <form th:action="@{/tour/sort}" method="get">
+        <select name="sort" id="sort">
+            <option value="price asc">asc</option>
+            <option value="price desc">desc</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Sort</button>
+    </form>
+</div>
+<div class="notify">
+    <div th:if="${message}">
+        <span th:text="${message}"></span>
+    </div>
+</div>
+
+<table id = "tour">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Code</th>
+        <th>Destination</th>
+        <th>Price</th>
+        <th>Type_id</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="t,tStatus : ${tour}">
+        <td th:text="${tStatus.count}"></td>
+        <td th:text="${t.getCode()}"></td>
+        <td th:text="${t.getDestination()}"></td>
+        <td th:text="${t.getPrice()}"></td>
+        <td th:text="${t.type.name}"></td>
+        <td><a th:href="@{/tour/update/{id}(id=${t.getId()})}">update</a></td>
+        <td><a th:href="@{/tour/delete/{id}(id=${t.getId()})}">delete</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<a class="btn btn-primary" th:if="${tour.hasPrevious()}"
+   th:href="@{/tour(page=${tour.number - 1})}">Previous</a>
+<span th:text="${tour.number + 1}"></span> | <span th:text="${tour.totalPages}"></span>
+<a class="btn btn-primary" th:if="${tour.hasNext()}"
+   th:href="@{/tour(page=${tour.number + 1})}">Next</a>
+<footer th:replace="/layout :: footer"></footer>
+<a href="/type/dto"> Đếm số lượng tour theo type</a>
+</body>
+</html>

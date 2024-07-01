@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="/layout :: head">
+    <title>Create Customer</title>
+</head>
+<body>
+<h3>Add Tour</h3>
+<p>
+    <a th:href="@{/tour}">
+        Back to tour list
+    </a>
+</p>
+<div id="form">
+    <form th:action="@{/tour/create}" th:object="${tour}"
+          method="POST" novalidate="novalidate">
+        <input type="hidden" th:field="*{id}"/>
+        <div>
+            <label for="code">code</label>
+            <input type="text" id="code" th:field="*{code}"/>
+        </div>
+        <div>
+            <label for="destination">destination</label>
+            <input type="text" id="destination" th:field="*{destination}"/>
+        </div>
+        <div>
+            <label for="price">price</label>
+            <input type="text" id="price" th:field="*{price}"/>
+            <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+        </div>
+        <div>
+            <label for="type">type</label>
+            <select id="type" th:field="*{type}">
+                <option th:each="t : ${type}" th:value="${t.id}" th:text="${t.name}"></option>
+            </select>
+        </div>
+        <input type="submit" value="Save"/>
+    </form>
+</div>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>
