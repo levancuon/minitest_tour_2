@@ -36,51 +36,20 @@ function getTour() {
 }
 
 
-function showFormUpdate(id) {
-    $.ajax({
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        type: "get",
-        url: "http://localhost:8080/api/tour/" + id,
-        success: function (data) {
-            let form = `
-             <form id="form" novalidate="novalidate">
-        <div>
-            <label for="code"> code</label>
-            <input type="text" id="code" value="${data.code}"/>
-        </div>
-        <div>
-            <label for="destination">destination</label>
-            <input type="text" id="destination" value="${data.destination}"/>
-        </div>
-        <div>
-            <label for="price">price</label>
-            <input type="text" id="price" value="${data.price}"/>
-        </div>
-        <input type="submit" value="Edit" id="update-tour" data-id="${data.id}" />
-    </form>
-            `
-            $(".form").html(form);
-            $("#update-tour").click(function (e) {
-                e.preventDefault();
-                update()
-            });
-        }
-    })
-
-}
 
 function update() {
     let code = $('#code').val();
     let destination = $('#destination').val();
     let price = $('#price').val();
+    let type = $('#type').val();
     let id = $("#update-tour").data().id
     let updateTour = {
         code: code,
         destination: destination,
-        price: price
+        price: price,
+        type:{
+            id: type
+        }
     }
 
     $.ajax({
@@ -162,27 +131,31 @@ function showFormCreate() {
                 options += `<option id="type"  value="${el.id}" >${el.name}</option>`;
             })
                 let formCreate = `
+             <h2>Add new tour</h2>
              <form id="form" novalidate="novalidate">
-        <div>
-            <label for="code"> code</label>
-            <input type="text" id="code" />
-        </div>
-        <div>
-            <label for="destination">destination</label>
-            <input type="text" id="destination" />
-        </div>
-        <div>
-            <label for="price">price</label>
-            <input type="text" id="price" />
-        </div>
-        <div>
-            <label for="type">type</label>
-            <select name="type" id="type">
-            ${options}
-            </select>
-            
-        </div>
+        <table border="1" style="margin-top: 10px">
+            <tr>
+                <td><label for="code"> code</label></td>
+                <td><input type="text" id="code" /></td>
+            </tr>
+            <tr>
+                <td><label for="destination">destination</label></td>
+                <td><input type="text" id="destination" /></td>
+            </tr>
+            <tr>
+                <td><label for="price">price</label></td>
+                <td><input type="text" id="price" /></td>
+            </tr>
+            <tr>
+                <td><label for="type">type</label></td>
+                <td><select name="type" id="type">
+                    ${options}
+                </select></td>
+            </tr>
+        </table>
+     
         <input type="submit" value="Save" id="create-tour"/>
+    </form>
             `
             $(".formCreate").html(formCreate);
             $("#create-tour").click(function (e) {
@@ -200,3 +173,74 @@ getTour();
 $("#showFormCreate").click(function () {
     showFormCreate()
 });
+
+//*************************************************************************************//
+function showFormUpdate(id) {
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: "get",
+        url: "http://localhost:8080/api/tour/" + id,
+        success: function (dataTour) {
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "get",
+                url: "http://localhost:8080/api/type",
+                success: function (dataType) {
+                    let options = "";
+                    $.each(dataType, function (index, el) {
+                        options += `<option id="type" ${el.id===dataTour.type.id?"selected" : ""} value="${el.id}" >${el.name}</option>`;
+
+                    })
+                    let form = `
+            <h2>Update tour</h2>
+            <form id="form" novalidate="novalidate" >
+            <table border="1">
+                <tr>
+              <div>
+                     <td><label for="code"> code</label></td>
+                     <td><input type="text" id="code" value="${dataTour.code}"/></td>
+                 </div>
+             </tr>
+             <tr>
+                 <div>
+                     <td><label for="destination">destination</label></td>
+                     <td><input type="text" id="destination" value="${dataTour.destination}"/></td>
+                 </div>
+             </tr>
+             <tr>
+                 <div>
+                     <td><label for="price">price</label></td>
+                     <td><input type="text" id="price" value="${dataTour.price}"/></td>
+                 </div>
+             </tr>
+                <tr>
+                    <div>
+                        <td><label for="type">type</label></td>
+                    <td><select name="type" id="type" onselect="${dataTour.type}">
+                        ${options}
+                    </select></td>
+                    </div>
+                </tr>
+            </table>
+            <input type="submit" value="Edit" id="update-tour" data-id="${dataTour.id}"/>
+            </form>
+            `
+                    $(".form").html(form);
+                    $("#update-tour").click(function (e) {
+                        e.preventDefault();
+                        update()
+                    });
+                }
+            })
+        }
+    })
+
+}
+
+
